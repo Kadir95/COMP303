@@ -1,3 +1,4 @@
+# A primitive AI that can play rock, paper, scissors.
 import copy
 import random
 

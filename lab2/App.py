@@ -1,3 +1,4 @@
+# Cannibals and missioners game implementation.
 import sys
 
 class Node:
