@@ -2,8 +2,6 @@
 import copy
 import random
 
-allPlayers = []
-
 randomPlayer = True
 
 rules = {
@@ -35,7 +33,48 @@ def game():
         ratio(playerStatistic)
         pass
 
-    allPlayers.append(playerStatistic)
+def aivsai():
+    playerStatisticPlayer1 = []
+    playerStatisticPlayer2 = []
+
+    gamemovestatisticPlayer1 = [["rock", 0], ["paper", 0], ["scissors", 0]]
+    gamemovestatisticPlayer2 = [["rock", 0], ["paper", 0], ["scissors", 0]]
+
+    roundnumber = 0
+    while roundnumber != 100000:
+        player1move = decition(playerStatisticPlayer1, gamemovestatisticPlayer1)
+        player2move = decition(playerStatisticPlayer2, gamemovestatisticPlayer2)
+
+        countmoves(player2move, gms=gamemovestatisticPlayer1)
+        countmoves(player1move, gms=gamemovestatisticPlayer2)
+
+        gameresult = resultdecition(player1move, player2move)
+
+        gameresultplayer1 = ""
+
+        if (gameresult == "L"):
+            gameresultplayer1 = "W"
+        elif (gameresult == "W"):
+            gameresultplayer1 = "L"
+        else:
+            gameresultplayer1 = "D"
+
+        playerStatisticPlayer1.append([roundnumber, player2move, player1move, gameresultplayer1])
+        playerStatisticPlayer2.append([roundnumber, player1move, player2move, gameresult])
+
+        roundnumber += 1
+
+    player1winstat = [0, 0, 0] #L,D,W
+    for round in playerStatisticPlayer1:
+        if round[3] == "L":
+            player1winstat[0] += 1
+        elif round[3] == "W":
+            player1winstat[2] += 1
+        else:
+            player1winstat[1] += 1
+
+    print ("AI player1 > L:", (player1winstat[0] / len(playerStatisticPlayer1) * 100), " D:", (player1winstat[1] / len(playerStatisticPlayer1) * 100), " W:", (player1winstat[2] / len(playerStatisticPlayer1) * 100))
+
 
 def ratio(playerstatistic):
     lostroundcount = 0
@@ -53,7 +92,7 @@ def resultdecition(pmove, amove):
     else:
         return "D"
 
-def decition(playerStatistic):
+def decition(playerStatistic, gms=gamemovestatistic):
     moves = ["rock", "paper", "scissors"]
     if len(playerStatistic) == 0:
         return random.choice(moves)
@@ -63,7 +102,7 @@ def decition(playerStatistic):
         else:
             lastmove = playerStatistic[len(playerStatistic) - 1][1]
 
-            gamemovestatistic_copy = copy.deepcopy(gamemovestatistic)
+            gamemovestatistic_copy = copy.deepcopy(gms)
 
             gamemovestatistic_copy = sorted(gamemovestatistic_copy, key=lambda x: x[1], reverse=True)
 
@@ -73,13 +112,13 @@ def decition(playerStatistic):
                 if st[0] != lastmove:
                     return rules[st[0]][0]
 
-def countmoves(pmove):
+def countmoves(pmove, gms=gamemovestatistic):
     if pmove == "rock":
-        gamemovestatistic[0][1] += 1
+        gms[0][1] += 1
     elif pmove == "paper":
-        gamemovestatistic[1][1] += 1
+        gms[1][1] += 1
     else:
-        gamemovestatistic[2][1] += 1
+        gms[2][1] += 1
 
 def takePlayerMove():
     moves = ["rock", "paper", "scissors"]
@@ -96,4 +135,5 @@ def takePlayerMove():
     else:
         return "scissors"
 
-game()
+#game()
+aivsai()
