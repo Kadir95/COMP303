@@ -1,1 +1,3 @@
-comp303
+COMP 450 - Artificial Intelligence
+
+LAB implementations
